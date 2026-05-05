@@ -5,11 +5,11 @@
   "private": true,
   "packageManager": "pnpm@10.30.3",
   "author": {
-    "url": "https://github.com/ourongxing/",
-    "email": "orongxing@gmail.com",
-    "name": "ourongxing"
+    "url": "https://github.com/wenyididi",
+    "email": "q1364253398@gmail.com",
+    "name": "wenyididi"
   },
-  "homepage": "https://github.com/ourongxing/newsnow",
+  "homepage": "https://github.com/wenyididi/NewsNow",
   "scripts": {
     "dev": "npm run presource && tsx --experimental-loader ./fix-path-loader.mjs ./node_modules/vite/bin/vite.js dev --host",
     "build": "npm run presource && vite build",
