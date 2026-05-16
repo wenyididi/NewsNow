@@ -22,17 +22,32 @@ export function NavBar() {
         更多
       </button>
       {fixedColumnIds.filter(id => id !== "realtime").map(columnId => (
-        <Link
-          key={columnId}
-          to="/c/$column"
-          params={{ column: columnId }}
-          className={$(
-            "nav-link",
-            currentId === columnId ? "nav-link-active" : "op-70 hover:op-100",
-          )}
-        >
-          {metadata[columnId].name}
-        </Link>
+        columnId === "hottest"
+          ? (
+              <Link
+                key={columnId}
+                to="/"
+                className={$(
+                  "nav-link",
+                  currentId === columnId ? "nav-link-active" : "op-70 hover:op-100",
+                )}
+              >
+                {metadata[columnId].name}
+              </Link>
+            )
+          : (
+              <Link
+                key={columnId}
+                to="/c/$column"
+                params={{ column: columnId }}
+                className={$(
+                  "nav-link",
+                  currentId === columnId ? "nav-link-active" : "op-70 hover:op-100",
+                )}
+              >
+                {metadata[columnId].name}
+              </Link>
+            )
       ))}
     </span>
   )
