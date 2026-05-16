@@ -6,5 +6,5 @@ export const Route = createFileRoute("/")({
 })
 
 function IndexComponent() {
-  return <Column id="realtime" />
+  return <Column id="hottest" />
 }
