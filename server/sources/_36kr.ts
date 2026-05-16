@@ -1,6 +1,6 @@
+import { XMLParser } from "fast-xml-parser"
 import type { NewsItem } from "@shared/types"
 import { load } from "cheerio"
-import dayjs from "dayjs/esm"
 
 const BROWSER_HEADERS = {
   "User-Agent":
@@ -57,56 +57,48 @@ const quick = defineSource(async () => {
 })
 
 const renqi = defineSource(async () => {
-  const baseURL = "https://36kr.com"
-  const formatted = dayjs().format("YYYY-MM-DD")
-  const url = `${baseURL}/hot-list/renqi/${formatted}/1`
+  const response = await myFetch<string>("https://36kr.com/feed", {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+      "Accept": "text/xml, application/rss+xml, application/xml;q=0.9, */*;q=0.8",
+    },
+    responseType: "text",
+  })
 
-  const response = await myFetch<any>(url, { headers: BROWSER_HEADERS })
-  const $ = load(response)
-  const articles: NewsItem[] = []
+  const parser = new XMLParser({
+    textNodeName: "$text",
+    ignoreAttributes: false,
+  })
 
-  // Primary: look for article items with specific classes
-  let $items = $(".article-item-info, .hot-list-item, [class*='article-item']")
-  // Fallback: look for any list of articles
-  if (!$items.length) {
-    $items = $("a[href*='/hot-list/']").parent()
-  }
-  // Fallback: find all links with article-like href patterns
-  if (!$items.length) {
-    $items = $("a[href*='/p/']").filter((_, el) => {
-      return $(el).text().trim().length > 5
-    })
-  }
+  const result: any = parser.parse(response as string)
+  const channel = result?.rss?.channel
+  if (!channel) throw new Error("Invalid RSS feed")
 
-  if ($items.length) {
-    $items.each((_, el) => {
-      const $el = $(el)
-      const $a = $el.is("a") ? $el : $el.find("a").first()
-      const href = $a.attr("href") || ""
-      const title = $a.text().trim()
+  let items = channel.item
+  if (!items) return []
+  if (!Array.isArray(items)) items = [items]
 
-      if (href && title && title.length > 2) {
-        const descEl = $el.find("[class*='description'], [class*='desc'], p").first()
-        const description = descEl.text().trim()
-        const author = $el.find("[class*='author'], [class*='user']").first().text().trim() || "36氪"
-        const hot = $el.find("[class*='hot'], [class*='num'], [class*='count']").first().text().trim()
-
-        if (!articles.some(n => n.url === href || n.title === title)) {
-          articles.push({
-            url: href.startsWith("http") ? href : `${baseURL}${href}`,
-            title,
-            id: href.replace(/^https?:\/\/[^\/]+/, ""),
-            extra: {
-              info: hot ? `${author}  |  ${hot}` : author,
-              hover: description || undefined,
-            },
-          })
-        }
-      }
-    })
-  }
-
-  return articles
+  return items
+    .filter((item: any) => item && item.title)
+    .map((item: any) => ({
+      title: typeof item.title === "string" ? item.title : item.title?.$text || "",
+      url:
+        typeof item.link === "string"
+          ? item.link
+          : item.link?.href || "https://36kr.com",
+      id:
+        typeof item.link === "string"
+          ? item.link
+          : item.link?.href || "https://36kr.com",
+      extra: {
+        info: "36氪",
+        hover:
+          typeof item.description === "string"
+            ? item.description.replace(/<[^>]*>/g, "").slice(0, 200)
+            : undefined,
+      },
+    }))
 })
 
 export default defineSource({

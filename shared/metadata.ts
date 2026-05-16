@@ -26,8 +26,60 @@ export const columns = {
   },
 } as const
 
-export const fixedColumnIds = ["focus", "hottest", "realtime"] as const satisfies Partial<ColumnID>[]
+export const fixedColumnIds = ["focus", "hottest"] as const satisfies Partial<ColumnID>[]
 export const hiddenColumns = Object.keys(columns).filter(id => !fixedColumnIds.includes(id as any)) as HiddenColumnID[]
+
+const hottestOrder: SourceID[] = [
+  // 新闻类
+  "weibo",
+  "toutiao",
+  "thepaper",
+  "ifeng",
+  "tencent-hot",
+  "zaobao",
+  "36kr-quick",
+  "baidu",
+  "wallstreetcn-hot",
+  "36kr-renqi",
+  "cls-hot",
+  "zhihu",
+  "douyin",
+  "kuaishou",
+  // 实时快讯
+  "wallstreetcn-quick",
+  "cls-telegraph",
+  "gelonghui",
+  "jin10",
+  "ithome",
+  "pcbeta-windows11",
+  // 编码技术类
+  "github-trending-today",
+  "hackernews",
+  "juejin",
+  "coolapk",
+  "sspai",
+  "freebuf",
+  // 论坛话题讨论类
+  "hupu",
+  "tieba",
+  "chongbuluo-hot",
+  "douban",
+  // Steam
+  "steam",
+  // 视频网站类
+  "bilibili-hot-search",
+  "bilibili-hot-video",
+  "bilibili-ranking",
+  "qqvideo-tv-hotsearch",
+  "iqiyi-hot-ranklist",
+  // 财经
+  "xueqiu-hotstock",
+]
+
+function sortHottestSources(ids: SourceID[]): SourceID[] {
+  const order = new Map(hottestOrder.map((id, i) => [id, i]))
+  return ids.sort((a, b) => (order.get(a) ?? 999) - (order.get(b) ?? 999))
+}
 
 export const metadata: Metadata = typeSafeObjectFromEntries(typeSafeObjectEntries(columns).map(([k, v]) => {
   switch (k) {
@@ -39,7 +91,7 @@ export const metadata: Metadata = typeSafeObjectFromEntries(typeSafeObjectEntrie
     case "hottest":
       return [k, {
         name: v.zh,
-        sources: typeSafeObjectEntries(sources).filter(([, v]) => v.type === "hottest" && !v.redirect).map(([k]) => k),
+        sources: sortHottestSources(typeSafeObjectEntries(sources).filter(([, s]) => (s.type === "hottest" || s.type === "realtime") && !s.redirect).map(([k]) => k as SourceID)),
       }]
     case "realtime":
       return [k, {

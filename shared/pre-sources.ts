@@ -227,23 +227,6 @@ export const originSources = {
     interval: Time.Realtime,
     home: "https://www.gelonghui.com",
   },
-  "fastbull": {
-    name: "法布财经",
-    color: "emerald",
-    home: "https://www.fastbull.cn",
-    column: "finance",
-    sub: {
-      express: {
-        title: "快讯",
-        type: "realtime",
-        interval: Time.Realtime,
-      },
-      news: {
-        title: "头条",
-        interval: Time.Common,
-      },
-    },
-  },
   "solidot": {
     name: "Solidot",
     color: "teal",
@@ -257,13 +240,6 @@ export const originSources = {
     column: "tech",
     type: "hottest",
     home: "https://news.ycombinator.com/",
-  },
-  "producthunt": {
-    name: "Product Hunt",
-    color: "red",
-    column: "tech",
-    type: "hottest",
-    home: "https://www.producthunt.com/",
   },
   "github": {
     name: "Github",
@@ -373,6 +349,7 @@ export const originSources = {
     color: "blue",
     type: "hottest",
     home: "https://www.nowcoder.com",
+    disable: true,
   },
   "sspai": {
     name: "少数派",

@@ -11,6 +11,10 @@ export function useDark() {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark)
+    const meta = document.querySelector("meta[name='theme-color']")
+    if (meta) {
+      meta.setAttribute("content", isDark ? "#11131e" : "#f5f5f5")
+    }
   }, [isDark])
 
   const setDark = (value: ColorScheme) => {

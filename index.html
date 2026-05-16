@@ -24,7 +24,7 @@
   <meta name="twitter:description" content="实时新闻聚合阅读器，汇集全球热点新闻，提供优雅的阅读体验" />
   <meta name="twitter:image" content="https://shishixinwen.news/og-image.svg" />
   
-  <meta name="theme-color" content="#6366f1" />
+  <meta name="theme-color" id="theme-color-meta" content="#11131e" />
   <link rel="preload" href="/Baloo2-Bold.subset.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
   <script>
@@ -39,6 +39,9 @@
     const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches
     if (theme === "auto" ? isDark : theme === "dark") {
       document.documentElement.classList.add("dark")
+      document.querySelector("meta[name='theme-color']")?.setAttribute("content", "#11131e")
+    } else {
+      document.querySelector("meta[name='theme-color']")?.setAttribute("content", "#f5f5f5")
     }
 
     const query = new URLSearchParams(window.location.search)

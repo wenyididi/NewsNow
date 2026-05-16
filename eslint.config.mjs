@@ -11,4 +11,6 @@ export default ourongxing({
   "react/no-comment-textnodes": "off",
   "react/no-nested-components": "off",
   "react/prefer-shorthand-boolean": "off",
+  "react/prefer-shorthand-fragment": "off",
+  "react/no-implicit-key": "off",
 })

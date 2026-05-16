@@ -280,33 +280,6 @@
     "color": "blue",
     "interval": 120000
   },
-  "fastbull": {
-    "redirect": "fastbull-express",
-    "name": "法布财经",
-    "type": "realtime",
-    "column": "finance",
-    "home": "https://www.fastbull.cn",
-    "color": "emerald",
-    "interval": 120000,
-    "title": "快讯"
-  },
-  "fastbull-express": {
-    "name": "法布财经",
-    "type": "realtime",
-    "column": "finance",
-    "home": "https://www.fastbull.cn",
-    "color": "emerald",
-    "interval": 120000,
-    "title": "快讯"
-  },
-  "fastbull-news": {
-    "name": "法布财经",
-    "column": "finance",
-    "home": "https://www.fastbull.cn",
-    "color": "emerald",
-    "interval": 1800000,
-    "title": "头条"
-  },
   "solidot": {
     "name": "Solidot",
     "column": "tech",
@@ -320,14 +293,6 @@
     "column": "tech",
     "home": "https://news.ycombinator.com/",
     "color": "orange",
-    "interval": 600000
-  },
-  "producthunt": {
-    "name": "Product Hunt",
-    "type": "hottest",
-    "column": "tech",
-    "home": "https://www.producthunt.com/",
-    "color": "red",
     "interval": 600000
   },
   "github": {
