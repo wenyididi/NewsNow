@@ -21,7 +21,7 @@ export function NavBar() {
       >
         更多
       </button>
-      {fixedColumnIds.map(columnId => (
+      {fixedColumnIds.filter(id => id !== "realtime").map(columnId => (
         <Link
           key={columnId}
           to="/c/$column"

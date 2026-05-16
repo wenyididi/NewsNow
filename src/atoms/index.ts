@@ -19,7 +19,7 @@ export const currentColumnIDAtom = atom<FixedColumnID>("realtime")
 
 export const currentSourcesAtom = atom((get) => {
   const id = get(currentColumnIDAtom)
-  return get(primitiveMetadataAtom).data[id]
+  return get(primitiveMetadataAtom).data[id] || []
 }, (get, set, update: Update<SourceID[]>) => {
   const _ = update instanceof Function ? update(get(currentSourcesAtom)) : update
   set(primitiveMetadataAtom, {

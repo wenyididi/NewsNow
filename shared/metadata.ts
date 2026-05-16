@@ -26,7 +26,7 @@ export const columns = {
   },
 } as const
 
-export const fixedColumnIds = ["focus", "hottest"] as const satisfies Partial<ColumnID>[]
+export const fixedColumnIds = ["focus", "hottest", "realtime"] as const satisfies Partial<ColumnID>[]
 export const hiddenColumns = Object.keys(columns).filter(id => !fixedColumnIds.includes(id as any)) as HiddenColumnID[]
 
 const hottestOrder: SourceID[] = [
