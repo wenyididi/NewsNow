@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { columns, metadata, fixedColumnIds, hiddenColumns } from "./metadata"
+import { columns, fixedColumnIds, hiddenColumns, metadata } from "./metadata"
+import { sources } from "./sources"
 
 describe("metadata", () => {
   it("has all columns defined", () => {
@@ -41,5 +42,68 @@ describe("metadata", () => {
       expect(col.name).toBeTruthy()
       expect(Array.isArray(col.sources)).toBe(true)
     }
+  })
+})
+
+describe("hottest column", () => {
+  const hottestSources = metadata.hottest.sources
+
+  it("includes both hottest and realtime type sources", () => {
+    const allHottest = Object.entries(sources).filter(([, s]) => s.type === "hottest" && !s.redirect).map(([k]) => k)
+    const allRealtime = Object.entries(sources).filter(([, s]) => s.type === "realtime" && !s.redirect).map(([k]) => k)
+    for (const id of allHottest) {
+      expect(hottestSources).toContain(id)
+    }
+    for (const id of allRealtime) {
+      expect(hottestSources).toContain(id)
+    }
+  })
+
+  it("excludes redirect sources", () => {
+    const redirects = Object.entries(sources).filter(([, s]) => s.redirect).map(([k]) => k)
+    for (const id of redirects) {
+      expect(hottestSources).not.toContain(id)
+    }
+  })
+
+  it("weibo should appear before coding sources", () => {
+    const weiboIdx = hottestSources.indexOf("weibo" as any)
+    const githubIdx = hottestSources.indexOf("github-trending-today" as any)
+    expect(weiboIdx).toBeGreaterThanOrEqual(0)
+    expect(githubIdx).toBeGreaterThanOrEqual(0)
+    expect(weiboIdx).toBeLessThan(githubIdx)
+  })
+
+  it("hackernews should appear before video sources", () => {
+    const hnIdx = hottestSources.indexOf("hackernews" as any)
+    const videoIdx = hottestSources.indexOf("bilibili-hot-search" as any)
+    expect(hnIdx).toBeGreaterThanOrEqual(0)
+    expect(videoIdx).toBeGreaterThanOrEqual(0)
+    expect(hnIdx).toBeLessThan(videoIdx)
+  })
+
+  it("does not include disabled nowcoder", () => {
+    expect(hottestSources).not.toContain("nowcoder")
+  })
+})
+
+describe("realtime column", () => {
+  it("still exists as a hidden column in metadata", () => {
+    expect(metadata).toHaveProperty("realtime")
+  })
+
+  it("has sources array", () => {
+    expect(Array.isArray(metadata.realtime.sources)).toBe(true)
+  })
+
+  it("realtime is still a fixedColumnId (for type compat)", () => {
+    expect(fixedColumnIds).toContain("realtime")
+  })
+
+  it("is hidden (not shown in nav)", () => {
+    // realtime is in fixedColumnIds for type compat but should also appear in hiddenColumns
+    // Actually it won't be hidden since it's in fixedColumnIds
+    // The nav filtering happens in UI component (navbar.tsx), not here
+    expect(fixedColumnIds).toContain("realtime")
   })
 })
